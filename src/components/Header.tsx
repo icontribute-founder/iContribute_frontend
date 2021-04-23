@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Container from "@material-ui/core/Container";
@@ -81,7 +81,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const Header = () => {
+const Header = ({ showFilter = true }) => {
     const classes = useStyles();
 
     const sortByOptions = { des: "Newest", asc: "Oldest" };
@@ -104,15 +104,26 @@ const Header = () => {
         setDashboard({ ...dashboard, sortBy });
     };
 
+    const history = useHistory();
+    const handleCreateOpportunityClick = () => {
+        history.push("/new-opportunity");
+    };
+
+    const handleLogoClick = () => {
+        history.push("/");
+    };
+
     return (
         <>
             <div className={classes.grow}>
                 <AppBar className={classes.appbar}>
                     <Container fixed>
                         <Toolbar>
-                            <div className="logo">
+                            <div className="logo" onClick={handleLogoClick}>
                                 <h1>iContribute</h1>
-                                <h3>We rise by lifting others.</h3>
+                                <h3 style={{ marginBottom: "2px" }}>
+                                    We rise by lifting others.
+                                </h3>
                             </div>
                             <div className={classes.search}>
                                 <div className={classes.searchIcon}>
@@ -137,24 +148,31 @@ const Header = () => {
                                 <img id="profile-pic" src={img} alt="" />
                             </div>
                         </Toolbar>
-                        <Toolbar>
-                            <button className={classes.button}>
-                                Create Opportunity
-                            </button>
-                            <div className={classes.grow} />
-                            <div className={classes.sectionDesktop}>
-                                <FilterMenu
-                                    options={sortByOptions}
-                                    selected={sortBy}
-                                    setSelected={sortBySelected}
-                                />
-                                <FilterMenu
-                                    options={typeOptions}
-                                    selected={opportunityType}
-                                    setSelected={typeSelected}
-                                />
-                            </div>
-                        </Toolbar>
+                        {showFilter ? (
+                            <Toolbar>
+                                <button
+                                    className={classes.button}
+                                    onClick={handleCreateOpportunityClick}
+                                >
+                                    Create Opportunity
+                                </button>
+                                <div className={classes.grow} />
+                                <div className={classes.sectionDesktop}>
+                                    <FilterMenu
+                                        options={sortByOptions}
+                                        selected={sortBy}
+                                        setSelected={sortBySelected}
+                                    />
+                                    <FilterMenu
+                                        options={typeOptions}
+                                        selected={opportunityType}
+                                        setSelected={typeSelected}
+                                    />
+                                </div>
+                            </Toolbar>
+                        ) : (
+                            ""
+                        )}
                     </Container>
                 </AppBar>
             </div>
